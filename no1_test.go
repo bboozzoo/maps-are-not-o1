@@ -1,6 +1,7 @@
 package no1
 
 import (
+	"math/rand"
 	"runtime"
 	"testing"
 )
@@ -33,14 +34,28 @@ func TestMap(t *testing.T) {
 	testTester(genMap(max), max, t)
 }
 
+func shuffledRange(start, end int) []int {
+	s := make([]int, end-start)
+	for i := 0; start+i < end; i++ {
+		s[i] = i
+	}
+	for i := range s {
+		j := rand.Intn(i + 1)
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s
+}
+
 func benchmark(r tester, b *testing.B) {
 	runtime.GC()
 	max := r.max()
+	is := shuffledRange(0, max)
 	b.ResetTimer()
 
 	var has bool
 	for i := 0; i < b.N; i++ {
-		for i := 0; i < max; i++ {
+		for _, i := range is {
 			has = r.has(i)
 		}
 	}
