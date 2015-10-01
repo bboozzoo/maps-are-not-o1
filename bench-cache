@@ -2,6 +2,12 @@
 
 event=cache-misses
 out=benchresults-cache.csv
+benchmark_name=Benchmark
+
+if [ "$1" == "rand" ]; then
+    out=benchresults-rand-cache.csv
+    benchmark_name=BenchmarkRand
+fi
 
 function run_perf() {
     echo "-- running $1" >&2
@@ -15,7 +21,7 @@ fi
 echo 'Elements,Map,Slice' > $out
 for cnt in 100 1000 10000 100000 1000000 10000000 100000000; do
     echo "-- running for $cnt"
-    slice=$(run_perf BenchmarkSlice$cnt)
-    map=$(run_perf BenchmarkMap$cnt)
+    slice=$(run_perf ${benchmark_name}Slice$cnt)
+    map=$(run_perf ${benchmark_name}Map$cnt)
     echo "$cnt,$map,$slice" >> $out
 done

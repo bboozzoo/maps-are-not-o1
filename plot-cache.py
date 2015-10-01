@@ -1,8 +1,20 @@
 #!/usr/bin/env python
 
+import sys
+import os.path
+import argparse
 from pylab import *
 
-data = np.loadtxt('benchresults-cache.csv', delimiter=',', skiprows=1)
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='benchmark result plotter')
+    parser.add_argument('result_file', )
+    return parser.parse_args()
+
+opts = parse_arguments()
+
+bname = os.path.splitext(os.path.basename(opts.result_file))[0]
+out_name = 'plot-' + bname + '.png'
+data = np.loadtxt(opts.result_file, delimiter=',', skiprows=1)
 
 dpi = 96
 w, h = 640, 480
@@ -17,4 +29,4 @@ plt.grid(True)
 legend(loc='upper left')
 
 
-savefig('plot-cache.png')
+savefig(out_name)
